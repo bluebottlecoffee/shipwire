@@ -9,7 +9,7 @@ RSpec.describe "General access", type: :feature, vcr: true do
 
     it "raises an error" do
       VCR.use_cassette("credentials_missing") do
-        response = Shipwire::Secret.new.list
+        response = Shipwire::Secret.list
 
         expect(response.ok?).to be_falsy
         expect(response.error_summary).to eq(
@@ -27,7 +27,7 @@ RSpec.describe "General access", type: :feature, vcr: true do
 
     it "raises an error" do
       VCR.use_cassette("credentials_incorrect") do
-        response = Shipwire::Secret.new.list
+        response = Shipwire::Secret.list
 
         expect(response.ok?).to be_falsy
         expect(response.error_summary).to eq(
@@ -41,7 +41,7 @@ RSpec.describe "General access", type: :feature, vcr: true do
     before { Shipwire.configuration.endpoint = 'https://api.fake.shipwire.com' }
 
     it "raises an error" do
-      response = Shipwire::Secret.new.list
+      response = Shipwire::Secret.list
 
       expect(response.ok?).to be_falsy
       expect(response.error_summary).to eq 'Unable to connect to Shipwire'
@@ -52,7 +52,7 @@ RSpec.describe "General access", type: :feature, vcr: true do
     before { Shipwire.configuration.timeout = 0.0001 }
 
     it "raises an error" do
-      response = Shipwire::Secret.new.list
+      response = Shipwire::Secret.list
 
       expect(response.ok?).to be_falsy
       expect(response.error_summary).to eq 'Shipwire connection timeout'

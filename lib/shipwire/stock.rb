@@ -1,6 +1,6 @@
 module Shipwire
   class Stock < Api
-    def list(params = {})
+    def self.list(params = {})
       request(:get, 'stock', params: params)
     end
   end

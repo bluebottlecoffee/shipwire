@@ -13,7 +13,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
         context "without params" do
           it "is successful" do
             VCR.use_cassette("products_#{product_type}_list") do
-              response = product_class.new.list
+              response = product_class.list
 
               expect(response.ok?).to be_truthy
             end
@@ -23,7 +23,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
         context "with params" do
           it "is successful" do
             VCR.use_cassette("products_#{product_type}_list_with_params") do
-              response = product_class.new.list(
+              response = product_class.list(
                 sku: "TEST-PRODUCT"
               )
 
@@ -36,7 +36,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
       context "management" do
         let!(:product) do
           VCR.use_cassette("product_#{product_type}") do
-            product_class.new.create(payload(product_type))
+            product_class.create(payload(product_type))
           end
         end
 
@@ -46,7 +46,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
               product_id =
                 product.body["resource"]["items"].first["resource"]["id"]
 
-              response = product_class.new.find(product_id)
+              response = product_class.find(product_id)
 
               expect(response.ok?).to be_truthy
             end
@@ -54,7 +54,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
 
           it "fails when id does not exist" do
             VCR.use_cassette("product_#{product_type}_find_fail") do
-              response = product_class.new.find(0)
+              response = product_class.find(0)
 
               expect(response.ok?).to be_falsy
               expect(response.error_summary).to eq 'Product not found.'
@@ -72,7 +72,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
                 description: "Super awesome description"
               )
 
-              response = product_class.new.update(product_id, payload)
+              response = product_class.update(product_id, payload)
 
               expect(response.ok?).to be_truthy
             end
@@ -84,7 +84,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
                 description: "Super awesome description"
               )
 
-              response = product_class.new.update(0, payload)
+              response = product_class.update(0, payload)
 
               expect(response.ok?).to be_falsy
               expect(response.error_summary).to eq 'Product not found.'
@@ -99,7 +99,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
                 product_id =
                   product.body["resource"]["items"].first["resource"]["id"]
 
-                response = product_class.new.retire(product_id)
+                response = product_class.retire(product_id)
 
                 expect(response.ok?).to be_truthy
               end
@@ -112,7 +112,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
                 product_id =
                   product.body["resource"]["items"].first["resource"]["id"]
 
-                response = product_class.new.retire([product_id, 0])
+                response = product_class.retire([product_id, 0])
 
                 expect(response.ok?).to be_truthy
               end
@@ -122,7 +122,7 @@ RSpec.describe "Product", type: :feature, vcr: true do
           context "when product does not exist" do
             it "is successful" do
               VCR.use_cassette("product_#{product_type}_retire_nonexistent") do
-                response = product_class.new.retire(0)
+                response = product_class.retire(0)
 
                 expect(response.ok?).to be_truthy
               end

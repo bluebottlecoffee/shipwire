@@ -5,7 +5,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
     context "without params" do
       it "is successful" do
         VCR.use_cassette("returns_list") do
-          response = Shipwire::Returns.new.list
+          response = Shipwire::Returns.list
 
           expect(response.ok?).to be_truthy
         end
@@ -15,7 +15,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
     context "using params" do
       it "is successful" do
         VCR.use_cassette("returns_list_with_params") do
-          response = Shipwire::Returns.new.list(
+          response = Shipwire::Returns.list(
             status: "canceled"
           )
 
@@ -34,7 +34,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
           quantity: 1
         }]
 
-        order = Shipwire::Orders.new.create(
+        order = Shipwire::Orders.create(
           orderNo: FFaker::Product.model,
           items: items,
           options: {
@@ -62,7 +62,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
         # `binding.pry` between the part where it create an order and the part
         # where it returns the order. Let it sit for about 5 minutes. Take a
         # restroom break. Eat a snack. Then let the tests continue as normal.
-        Shipwire::Returns.new.create(
+        Shipwire::Returns.create(
           originalOrder: {
             id: order_id
           },
@@ -81,7 +81,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
             return_id =
               return_order.body["resource"]["items"].first["resource"]["id"]
 
-            response = Shipwire::Returns.new.find(return_id)
+            response = Shipwire::Returns.find(return_id)
 
             expect(response.ok?).to be_truthy
           end
@@ -94,7 +94,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
             return_id =
               return_order.body["resource"]["items"].first["resource"]["id"]
 
-            response = Shipwire::Returns.new.find(return_id, expand: "items")
+            response = Shipwire::Returns.find(return_id, expand: "items")
 
             expect(response.ok?).to be_truthy
           end
@@ -103,7 +103,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_find_fail") do
-          response = Shipwire::Returns.new.find(0)
+          response = Shipwire::Returns.find(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Receiving Order not found.'
@@ -118,7 +118,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
             return_id =
               return_order.body["resource"]["items"].first["resource"]["id"]
 
-            response = Shipwire::Returns.new.holds(return_id)
+            response = Shipwire::Returns.holds(return_id)
 
             expect(response.ok?).to be_truthy
           end
@@ -131,7 +131,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
             return_id =
               return_order.body["resource"]["items"].first["resource"]["id"]
 
-            response = Shipwire::Returns.new.holds(return_id, includeCleared: 0)
+            response = Shipwire::Returns.holds(return_id, includeCleared: 0)
 
             expect(response.ok?).to be_truthy
           end
@@ -140,7 +140,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_holds_fail") do
-          response = Shipwire::Returns.new.holds(0)
+          response = Shipwire::Returns.holds(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Receiving Order not found.'
@@ -154,7 +154,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
           return_id =
             return_order.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Returns.new.items(return_id)
+          response = Shipwire::Returns.items(return_id)
 
           expect(response.ok?).to be_truthy
         end
@@ -162,7 +162,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_items_fail") do
-          response = Shipwire::Returns.new.items(0)
+          response = Shipwire::Returns.items(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Receiving Order not found.'
@@ -176,7 +176,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
           return_id =
             return_order.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Returns.new.trackings(return_id)
+          response = Shipwire::Returns.trackings(return_id)
 
           expect(response.ok?).to be_truthy
         end
@@ -184,7 +184,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_trackings_fail") do
-          response = Shipwire::Returns.new.trackings(0)
+          response = Shipwire::Returns.trackings(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Receiving Order not found.'
@@ -198,7 +198,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
           return_id =
             return_order.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Returns.new.labels(return_id)
+          response = Shipwire::Returns.labels(return_id)
 
           expect(response.ok?).to be_truthy
         end
@@ -206,7 +206,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_labels_fail") do
-          response = Shipwire::Returns.new.labels(0)
+          response = Shipwire::Returns.labels(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Receiving Label not found.'
@@ -220,7 +220,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
           return_id =
             return_order.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Returns.new.cancel(return_id)
+          response = Shipwire::Returns.cancel(return_id)
 
           expect(response.ok?).to be_truthy
         end
@@ -228,7 +228,7 @@ RSpec.describe "Returns", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("return_cancel_fail") do
-          response = Shipwire::Returns.new.cancel(0)
+          response = Shipwire::Returns.cancel(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Return Order not found.'

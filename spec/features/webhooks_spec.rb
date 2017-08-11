@@ -4,7 +4,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
   context "list" do
     it "is successful" do
       VCR.use_cassette("webhooks_list") do
-        response = Shipwire::Webhooks.new.list
+        response = Shipwire::Webhooks.list
 
         expect(response.ok?).to be_truthy
       end
@@ -18,7 +18,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
 
     let!(:webhook) do
       VCR.use_cassette("webhook") do
-        Shipwire::Webhooks.new.create(
+        Shipwire::Webhooks.create(
           topic: webhook_topic,
           url:   webhook_url
         )
@@ -28,7 +28,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
     context "create" do
       it "fails with non-https callback URL" do
         VCR.use_cassette("webhooks_create_insecure") do
-          response = Shipwire::Webhooks.new.create(
+          response = Shipwire::Webhooks.create(
             topic: webhook_topic,
             url:   "http://www.reddit.com/"
           )
@@ -44,7 +44,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
         VCR.use_cassette("webhooks_find") do
           webhook_id = webhook.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Webhooks.new.find(webhook_id)
+          response = Shipwire::Webhooks.find(webhook_id)
 
           expect(response.ok?).to be_truthy
         end
@@ -52,7 +52,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
 
       it "fails when id does not exist" do
         VCR.use_cassette("webhooks_find_fail") do
-          response = Shipwire::Webhooks.new.find(0)
+          response = Shipwire::Webhooks.find(0)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq 'Subscription not found.'
@@ -70,7 +70,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
             url:   webhook_url_update
           }
 
-          response = Shipwire::Webhooks.new.update(webhook_id, payload)
+          response = Shipwire::Webhooks.update(webhook_id, payload)
 
           expect(response.ok?).to be_truthy
         end
@@ -83,7 +83,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
             url:   webhook_url_update
           }
 
-          response = Shipwire::Webhooks.new.update(0, payload)
+          response = Shipwire::Webhooks.update(0, payload)
 
           expect(response.ok?).to be_falsy
           expect(response.error_summary).to eq "Invalid request"
@@ -96,7 +96,7 @@ RSpec.describe "Webhooks", type: :feature, vcr: true do
         VCR.use_cassette("webhooks_remove") do
           webhook_id = webhook.body["resource"]["items"].first["resource"]["id"]
 
-          response = Shipwire::Webhooks.new.remove(webhook_id)
+          response = Shipwire::Webhooks.remove(webhook_id)
 
           expect(response.ok?).to be_truthy
         end

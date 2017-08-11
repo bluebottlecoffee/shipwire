@@ -6,8 +6,6 @@ module Shipwire
 
     API_VERSION = 3
 
-    attr_reader :method, :path, :params, :body
-
     def initialize(method: :get, path: '', params: {}, body: {})
       @method = method
       @path = path
@@ -43,10 +41,10 @@ module Shipwire
 
     def make_request
       @connection.public_send(@method, full_path) do |request|
-        request.params = params unless params.empty?
+        request.params = formatted_params unless formatted_params.empty?
         request.options.open_timeout = Shipwire.configuration.open_timeout
         request.options.timeout = Shipwire.configuration.timeout
-        request.body = body unless body.empty?
+        request.body = @body unless @body.empty?
       end
     end
 
@@ -58,8 +56,8 @@ module Shipwire
       "/api/v#{API_VERSION}/#{@path}"
     end
 
-    def params
-      Utility.camel_case(@params)
+    def formatted_params
+      @formatted_params ||= Utility.camel_case(@params)
     end
 
     def username

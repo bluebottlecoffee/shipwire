@@ -5,7 +5,7 @@ RSpec.describe "Stock", type: :feature, vcr: true do
     context "without params" do
       it "is successful" do
         VCR.use_cassette("stock_without_params") do
-          response = Shipwire::Stock.new.list
+          response = Shipwire::Stock.list
 
           expect(response.ok?).to be_truthy
         end
@@ -15,7 +15,7 @@ RSpec.describe "Stock", type: :feature, vcr: true do
     context "with params" do
       it "is successful" do
         VCR.use_cassette("stock_with_params") do
-          response = Shipwire::Stock.new.list(
+          response = Shipwire::Stock.list(
             sku: "TEST-PRODUCT"
           )
 
@@ -29,7 +29,7 @@ RSpec.describe "Stock", type: :feature, vcr: true do
         # Returns a successful result. There is just no records in the result
         # set because they were all filtered out. There are no errors.
         VCR.use_cassette("stock_with_params_no_sku") do
-          response = Shipwire::Stock.new.list(
+          response = Shipwire::Stock.list(
             sku: "FAKE-PRODUCT"
           )
 
