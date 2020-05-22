@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday_middleware", ">= 0.9.2"
   spec.add_dependency "recursive-open-struct", "~> 0.6.4"
 
-  spec.add_development_dependency "rspec",  "~> 3.2.0"
+  spec.add_development_dependency "rspec",  "~> 3.9.0"
   spec.add_development_dependency "ffaker", "~> 2.0.0"
   spec.add_development_dependency "simplecov", "~> 0.10.0"
   spec.add_development_dependency "vcr", "~> 2.9.3"
