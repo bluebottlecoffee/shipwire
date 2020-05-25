@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "deep_merge", "~> 1.0.0"
-  spec.add_dependency "faraday", "~> 0.9"
+  spec.add_dependency "faraday", ">= 0.9", "< 2.0"
   spec.add_dependency "faraday_middleware", ">= 0.9.2"
   spec.add_dependency "recursive-open-struct", "~> 0.6.4"
 
